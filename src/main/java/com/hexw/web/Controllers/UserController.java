@@ -70,20 +70,4 @@ public class UserController {
 		}
 	}
 
-//	// Search for flights
-//	@PostMapping("/searchFlights")
-//	public ResponseEntity<List<Flight>> searchFlights(@RequestParam String tripType, @RequestParam String origin,
-//			@RequestParam String destination, @RequestParam List<String> dates, @RequestParam int numOfTravellers) {
-//		try {
-//			List<Flight> flights = userServices.searchFlights(tripType, origin, destination, dates, numOfTravellers);
-//			if (flights.isEmpty()) {
-//				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//			}
-//			return new ResponseEntity<>(flights, HttpStatus.OK);
-//		} catch (IllegalArgumentException e) {
-//			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
 }

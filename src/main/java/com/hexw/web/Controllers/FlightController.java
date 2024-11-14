@@ -74,5 +74,11 @@ public class FlightController {
 	public List<Flight> getAllFlights() {
 		return flightService.getAllFlights();
 	}
+	@PostMapping("/{flightId}/book-seat")
+    public String bookSeat(
+            @PathVariable Long flightId,
+            @RequestParam List<String> seatNumber) {
+        return flightService.bookSeats(flightId, seatNumber);
+    }
 
 }

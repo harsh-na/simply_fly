@@ -1,7 +1,13 @@
 package com.hexw.web.Models;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,8 +15,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -62,32 +66,55 @@ public class Flight {
 	@Column
 	private Long bookingId;
 
-	@NotNull(message = "Date of flight is required.")
-	@Temporal(TemporalType.DATE)
-	private Date date;
+	// Use JSON to store dates
+	@Column(columnDefinition = "JSON")
+	private String dates;
 
-	@Lob
-	@Column(columnDefinition = "TEXT")
+	@Column(columnDefinition = "JSON")
 	private String timings;
 
-	@Column(name = "departure_date")
-	private LocalDate departureDate;
+    @Column(columnDefinition = "JSON")
+    @NotNull
+    private String seats; // JSON to represent seat availability data
 
-	@Column(name = "return_date")
-	private LocalDate returnDate;
+	public Flight() {
+
+	}
 
 	@Override
 	public String toString() {
 		return "Flight [flightId=" + flightId + ", companyId=" + companyId + ", flightNo=" + flightNo + ", origin="
 				+ origin + ", destination=" + destination + ", totalSeats=" + totalSeats + ", availableSeats="
 				+ availableSeats + ", seatTypes=" + seatTypes + ", fare=" + fare + ", baggageInfo=" + baggageInfo
-				+ ", bookingId=" + bookingId + ", date=" + date + ", timings=" + timings + ", departureDate="
-				+ departureDate + ", returnDate=" + returnDate + "]";
+				+ ", bookingId=" + bookingId + ", dates=" + dates + ", timings=" + timings + ", seats=" + seats + "]";
 	}
 
-	public Flight() {
-		
-	}
+	
+
+    // Method to deserialize the seat data (seats field)
+    public Map<String, Map<String, Boolean>> getSeatData() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            // Convert JSON string to a Map
+            return objectMapper.readValue(seats, new TypeReference<Map<String, Map<String, Boolean>>>() {});
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Method to serialize seat data into the 'seats' field
+    public void setSeatData(Map<String, Map<String, Boolean>> seatData) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            // Convert Map to JSON and store in the seats field
+            this.seats = objectMapper.writeValueAsString(seatData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Getters and setters for other fields
 
 	public Long getFlightId() {
 		return flightId;
@@ -177,56 +204,80 @@ public class Flight {
 		this.bookingId = bookingId;
 	}
 
-	public Date getDate() {
-		return date;
+	// ObjectMapper instance for handling JSON
+	private static final ObjectMapper objectMapper = new ObjectMapper();
+
+	// Getters and setters for dates
+	public List<String> getDates() {
+		try {
+			return objectMapper.readValue(this.dates, new TypeReference<List<String>>() {
+			});
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to parse dates JSON", e);
+		}
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDates(List<String> dates) {
+		try {
+			this.dates = objectMapper.writeValueAsString(dates);
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to convert dates to JSON", e);
+		}
 	}
 
-	public String getTimings() {
-		return timings;
+	// Custom getter for timings
+	public List<Map<String, String>> getTimings() {
+		try {
+			if (timings != null) {
+				objectMapper.findAndRegisterModules(); // Register JavaTimeModule for date-time parsing
+				return objectMapper.readValue(timings, new TypeReference<List<Map<String, String>>>() {
+				});
+			}
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	public void setTimings(String timings) {
-		this.timings = timings;
+	// Custom setter for timings
+	public void setTimings(List<Map<String, String>> timingsList) {
+		try {
+			if (timingsList != null) {
+				this.timings = objectMapper.writeValueAsString(timingsList);
+			}
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public Flight(Long flightId, Long companyId, String flightNo, String origin, String destination, Integer totalSeats,
-			Integer availableSeats, String seatTypes, Integer fare, String baggageInfo, Long bookingId, Date date,
-			String timings, LocalDate departureDate, LocalDate returnDate) {
-		super();
-		this.flightId = flightId;
-		this.companyId = companyId;
-		this.flightNo = flightNo;
-		this.origin = origin;
-		this.destination = destination;
-		this.totalSeats = totalSeats;
-		this.availableSeats = availableSeats;
-		this.seatTypes = seatTypes;
-		this.fare = fare;
-		this.baggageInfo = baggageInfo;
-		this.bookingId = bookingId;
-		this.date = date;
-		this.timings = timings;
-		this.departureDate = departureDate;
-		this.returnDate = returnDate;
-	}
+	public Flight(Long flightId,  Long companyId,
+            String flightNo,
+             String origin,
+             String destination,
+             Integer totalSeats,
+             Integer availableSeats,
+            String seatTypes,
+             Integer fare,
+            String baggageInfo, Long bookingId,
+            String dates, String timings, String seats) {
+  
+  this.flightId = flightId;
+  this.companyId = companyId;
+  this.flightNo = flightNo;
+  this.origin = origin;
+  this.destination = destination;
+  this.totalSeats = totalSeats;
+  this.availableSeats = availableSeats;
+  this.seatTypes = seatTypes;
+  this.fare = fare;
+  this.baggageInfo = baggageInfo;
+  this.bookingId = bookingId;
 
-	public LocalDate getDepartureDate() {
-		return departureDate;
-	}
+  // Initialize JSON fields with default empty values if they are null
+  this.dates = (dates != null) ? dates : "[]"; // Empty JSON array
+  this.timings = (timings != null) ? timings : "[]"; // Empty JSON array
+  this.seats = (seats != null) ? seats : "{}"; // Empty JSON object
+}
 
-	public void setDepartureDate(LocalDate departureDate) {
-		this.departureDate = departureDate;
-	}
 
-	public LocalDate getReturnDate() {
-		return returnDate;
-	}
-
-	public void setReturnDate(LocalDate returnDate) {
-		this.returnDate = returnDate;
-	}
 }
