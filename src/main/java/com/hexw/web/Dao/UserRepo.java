@@ -1,8 +1,9 @@
-package com.hexw.web.Dao;
+package com.hexw.web.dao;
 
-import com.hexw.web.Models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.hexw.web.models.User;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Long> {

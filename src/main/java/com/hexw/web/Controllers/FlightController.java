@@ -1,6 +1,5 @@
-package com.hexw.web.Controllers;
+package com.hexw.web.controllers;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hexw.web.Models.Flight;
-import com.hexw.web.Services.FlightServices;
+import com.hexw.web.models.Flight;
+import com.hexw.web.dto.FlightDTO;
+import com.hexw.web.services.FlightServices;
+import com.hexw.web.mapper.FlightMapper;
 
 @RestController
 @RequestMapping("/api/flights")
@@ -28,25 +29,30 @@ public class FlightController {
 	private FlightServices flightService;
 
 	@PostMapping("/add")
-	public ResponseEntity<Flight> addFlight(@RequestBody Flight flight) {
+	public ResponseEntity<FlightDTO> addFlight(@RequestBody FlightDTO flightDTO) {
+		// Convert DTO to Entity using FlightMapper
+		Flight flight = FlightMapper.toFlightEntity(flightDTO);
 		Flight savedFlight = flightService.addFlight(flight);
-		return ResponseEntity.ok(savedFlight);
+		// Convert saved Flight entity back to DTO and return it
+		FlightDTO savedFlightDTO = FlightMapper.toFlightDTO(savedFlight);
+		return ResponseEntity.ok(savedFlightDTO);
 	}
 
 	@GetMapping("/{flightId}")
-	public ResponseEntity<Flight> getFlightById(@PathVariable Long flightId) {
-		Optional<Flight> flight = flightService.getFlightById(flightId);
-		return flight.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+	public ResponseEntity<FlightDTO> getFlightById(@PathVariable Long flightId) {
+	    Optional<FlightDTO> flightDTO = flightService.getFlightById(flightId);
+	    return flightDTO.map(ResponseEntity::ok)  // Directly return FlightDTO from service
+	                    .orElseGet(() -> ResponseEntity.notFound().build()); // Return 404 if not found
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<List<Flight>> searchFlights(@RequestParam String tripType, @RequestParam String origin,
+	public ResponseEntity<List<FlightDTO>> searchFlights(@RequestParam String tripType, @RequestParam String origin,
 			@RequestParam String destination, @RequestParam List<String> dates, @RequestParam int numOfTravellers) {
 
 		try {
-			List<Flight> flights = flightService.searchFlights(tripType, origin, destination, dates, numOfTravellers);
-
-			// Return HTTP 200 (OK) with the list of flights if the search is successful
+			List<FlightDTO> flights = flightService.searchFlights(tripType, origin, destination, dates, numOfTravellers);
+			
+			// Return the DTO list
 			return new ResponseEntity<>(flights, HttpStatus.OK);
 
 		} catch (IllegalArgumentException ex) {
@@ -59,9 +65,13 @@ public class FlightController {
 	}
 
 	@PutMapping("/update/{flightId}")
-	public ResponseEntity<Flight> updateFlight(@PathVariable Long flightId, @RequestBody Flight flightDetails) {
+	public ResponseEntity<FlightDTO> updateFlight(@PathVariable Long flightId, @RequestBody FlightDTO flightDTO) {
+		// Convert DTO to Entity using FlightMapper
+		Flight flightDetails = FlightMapper.toFlightEntity(flightDTO);
 		Flight updatedFlight = flightService.updateFlight(flightId, flightDetails);
-		return ResponseEntity.ok(updatedFlight);
+		// Convert the updated Flight entity back to DTO and return it
+		FlightDTO updatedFlightDTO = FlightMapper.toFlightDTO(updatedFlight);
+		return ResponseEntity.ok(updatedFlightDTO);
 	}
 
 	@DeleteMapping("/delete/{flightId}")
@@ -71,14 +81,17 @@ public class FlightController {
 	}
 
 	@GetMapping("/all")
-	public List<Flight> getAllFlights() {
-		return flightService.getAllFlights();
+	public List<FlightDTO> getAllFlights() {
+		List<Flight> flights = flightService.getAllFlights();
+		// Convert the list of Flight entities to DTOs
+		List<FlightDTO> flightDTOs = FlightMapper.toFlightDTOList(flights);
+		return flightDTOs;
 	}
-	@PostMapping("/{flightId}/book-seat")
-    public String bookSeat(
-            @PathVariable Long flightId,
-            @RequestParam List<String> seatNumber) {
-        return flightService.bookSeats(flightId, seatNumber);
-    }
 
+	@PostMapping("/{flightId}/book-seat")
+	public String bookSeat(
+			@PathVariable Long flightId,
+			@RequestParam List<String> seatNumber) {
+		return flightService.bookSeats(flightId, seatNumber);
+	}
 }

@@ -1,4 +1,4 @@
-package com.hexw.web.Exceptions;
+package com.hexw.web.exceptions;
 
 import java.time.LocalDateTime;
 

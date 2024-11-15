@@ -1,6 +1,5 @@
-package com.hexw.web.Models;
+package com.hexw.web.models;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -73,9 +72,8 @@ public class Flight {
 	@Column(columnDefinition = "JSON")
 	private String timings;
 
-    @Column(columnDefinition = "JSON")
-    @NotNull
-    private String seats; // JSON to represent seat availability data
+	@Column(columnDefinition = "JSON")
+	private String seats;
 
 	public Flight() {
 
@@ -89,32 +87,32 @@ public class Flight {
 				+ ", bookingId=" + bookingId + ", dates=" + dates + ", timings=" + timings + ", seats=" + seats + "]";
 	}
 
-	
+	// Custom getter for seats
+	public Map<String, Boolean> getSeats() {
+		try {
+			if (seats != null) {
+				objectMapper.findAndRegisterModules();
+				return objectMapper.readValue(seats, new TypeReference <Map<String, Boolean>>() {
+				});
+			}
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-    // Method to deserialize the seat data (seats field)
-    public Map<String, Map<String, Boolean>> getSeatData() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            // Convert JSON string to a Map
-            return objectMapper.readValue(seats, new TypeReference<Map<String, Map<String, Boolean>>>() {});
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+	// Custom setter for seats
+	public void setSeats(Map<String, Boolean> seatList) {
+		try {
+			if (seatList != null) {
+				this.seats = objectMapper.writeValueAsString(seatList);
+			}
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+	}
 
-    // Method to serialize seat data into the 'seats' field
-    public void setSeatData(Map<String, Map<String, Boolean>> seatData) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            // Convert Map to JSON and store in the seats field
-            this.seats = objectMapper.writeValueAsString(seatData);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Getters and setters for other fields
+	// Getters and setters for other fields
 
 	public Long getFlightId() {
 		return flightId;
@@ -250,34 +248,24 @@ public class Flight {
 		}
 	}
 
-	public Flight(Long flightId,  Long companyId,
-            String flightNo,
-             String origin,
-             String destination,
-             Integer totalSeats,
-             Integer availableSeats,
-            String seatTypes,
-             Integer fare,
-            String baggageInfo, Long bookingId,
-            String dates, String timings, String seats) {
-  
-  this.flightId = flightId;
-  this.companyId = companyId;
-  this.flightNo = flightNo;
-  this.origin = origin;
-  this.destination = destination;
-  this.totalSeats = totalSeats;
-  this.availableSeats = availableSeats;
-  this.seatTypes = seatTypes;
-  this.fare = fare;
-  this.baggageInfo = baggageInfo;
-  this.bookingId = bookingId;
-
-  // Initialize JSON fields with default empty values if they are null
-  this.dates = (dates != null) ? dates : "[]"; // Empty JSON array
-  this.timings = (timings != null) ? timings : "[]"; // Empty JSON array
-  this.seats = (seats != null) ? seats : "{}"; // Empty JSON object
-}
-
+	public Flight(Long flightId, Long companyId,String flightNo, String origin, String destination, Integer totalSeats,
+			Integer availableSeats, String seatTypes,Integer fare, String baggageInfo, Long bookingId,
+			String dates, String timings, String seats) {
+		super();
+		this.flightId = flightId;
+		this.companyId = companyId;
+		this.flightNo = flightNo;
+		this.origin = origin;
+		this.destination = destination;
+		this.totalSeats = totalSeats;
+		this.availableSeats = availableSeats;
+		this.seatTypes = seatTypes;
+		this.fare = fare;
+		this.baggageInfo = baggageInfo;
+		this.bookingId = bookingId;
+		this.dates = dates;
+		this.timings = timings;
+		this.seats = seats;
+	}
 
 }

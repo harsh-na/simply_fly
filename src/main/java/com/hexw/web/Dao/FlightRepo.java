@@ -1,11 +1,11 @@
-package com.hexw.web.Dao;
+package com.hexw.web.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.hexw.web.Models.Flight;
+import com.hexw.web.models.Flight;
 
 import java.util.List;
 

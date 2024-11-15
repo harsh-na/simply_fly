@@ -1,4 +1,4 @@
-package com.hexw.web.Models;
+package com.hexw.web.models;
 
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -42,10 +42,6 @@ public class User {
 	@Size(min = 8, message = "Password should be at least 8 characters long")
 	private String password;
 
-	@NotBlank(message = "Confirm password is required")
-	@Size(min = 8, message = "Confirm password should be at least 8 characters long")
-	private String confirmPassword;
-
 	@NotBlank(message = "Gender is required")
 	private String gender;
 
@@ -57,10 +53,9 @@ public class User {
 	@Size(max = 255, message = "Address should not exceed 255 characters")
 	private String address;
 
+	@Column(columnDefinition="date")
 	@NotNull(message = "Date of Birth is required")
-	@Past(message = "Date of Birth should be in the past")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date dateOfBirth;
+	private String dateOfBirth;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(updatable = false)
@@ -85,7 +80,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "UserModel [userId=" + userId + ", name=" + name + ", email=" + email + ", password=" + password
-				+ ", confirmPassword=" + confirmPassword + ", gender=" + gender + ", contact=" + contact + ", address="
+				+ ", gender=" + gender + ", contact=" + contact + ", address="
 				+ address + ", dateOfBirth=" + dateOfBirth + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
 				+ ", role=" + role + "]";
 	}
@@ -122,14 +117,6 @@ public class User {
 		this.password = password;
 	}
 
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
-
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
-	}
-
 	public String getGender() {
 		return gender;
 	}
@@ -154,11 +141,11 @@ public class User {
 		this.address = address;
 	}
 
-	public Date getDateOfBirth() {
+	public String getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
@@ -190,20 +177,17 @@ public class User {
 
 	}
 
-	public User(Long userId, String name, String email, String password, String confirmPassword, String gender,
-			Long contact, String address, Date dateOfBirth, Date createdAt, Date updatedAt, String role) {
+	public User(Long userId, String name, String email, String password, String gender,
+			Long contact, String address, String dateOfBirth, String role) {
 		super();
 		this.userId = userId;
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.confirmPassword = confirmPassword;
 		this.gender = gender;
 		this.contact = contact;
 		this.address = address;
 		this.dateOfBirth = dateOfBirth;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
 		this.role = role;
 	}
 

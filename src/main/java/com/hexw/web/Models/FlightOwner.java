@@ -1,4 +1,4 @@
-package com.hexw.web.Models;
+package com.hexw.web.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
