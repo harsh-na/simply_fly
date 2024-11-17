@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "booking")
@@ -39,7 +40,7 @@ public class Booking {
     @NotNull(message = "Seat number is required")
     @Min(value = 1, message = "Seat number must be at least 1")
     @Column(name = "seat_no", nullable = false)
-    private Integer seatNo;
+    private List<String> seatNo;
 
     @NotBlank(message = "Booking status is required")
     @Column(name = "booking_status", nullable = false)
@@ -109,11 +110,11 @@ public class Booking {
 		this.paymentId = paymentId;
 	}
 
-	public Integer getSeatNo() {
+	public List<String> getSeatNo() {
 		return seatNo;
 	}
 
-	public void setSeatNo(Integer seatNo) {
+	public void setSeatNo(List<String> seatNo) {
 		this.seatNo = seatNo;
 	}
 
@@ -133,7 +134,7 @@ public class Booking {
 		this.totalAmount = totalAmount;
 	}
 
-	public Booking(Long userId, Long flightId, String origin, String destination, Long paymentId, Integer seatNo, String bookingStatus, BigDecimal totalAmount) {
+	public Booking(Long userId, Long flightId, String origin, String destination, Long paymentId, List<String> seatNo, String bookingStatus, BigDecimal totalAmount) {
         this.userId = userId;
         this.flightId = flightId;
         this.origin = origin;

@@ -87,11 +87,4 @@ public class FlightController {
 		List<FlightDTO> flightDTOs = FlightMapper.toFlightDTOList(flights);
 		return flightDTOs;
 	}
-
-	@PostMapping("/{flightId}/book-seat")
-	public String bookSeat(
-			@PathVariable Long flightId,
-			@RequestParam List<String> seatNumber) {
-		return flightService.bookSeats(flightId, seatNumber);
-	}
 }

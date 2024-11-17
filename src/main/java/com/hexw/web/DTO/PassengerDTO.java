@@ -8,7 +8,7 @@ public class PassengerDTO {
     private String email;
     private Long phone;
     private String seatType;
-    private Integer seatNo;
+    private String seatNo;
 
     // Getters and Setters
     public Long getPassengerId() {
@@ -59,11 +59,11 @@ public class PassengerDTO {
         this.seatType = seatType;
     }
 
-    public Integer getSeatNo() {
+    public String getSeatNo() {
         return seatNo;
     }
 
-    public void setSeatNo(Integer seatNo) {
+    public void setSeatNo(String seatNo) {
         this.seatNo = seatNo;
     }
 }

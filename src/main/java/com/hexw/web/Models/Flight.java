@@ -1,5 +1,7 @@
 package com.hexw.web.models;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +58,7 @@ public class Flight {
 
 	@Min(value = 0, message = "Fare cannot be negative.")
 	@Column(nullable = false)
-	private Integer fare;
+	private BigDecimal fare;
 
 	@Lob
 	@Column(columnDefinition = "TEXT")
@@ -89,28 +91,34 @@ public class Flight {
 
 	// Custom getter for seats
 	public Map<String, Boolean> getSeats() {
-		try {
-			if (seats != null) {
-				objectMapper.findAndRegisterModules();
-				return objectMapper.readValue(seats, new TypeReference <Map<String, Boolean>>() {
-				});
-			}
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
+	    try {
+	        if (seats != null && !seats.isEmpty()) {
+	            objectMapper.findAndRegisterModules(); // Ensure proper modules for JSON parsing are loaded
+	            return objectMapper.readValue(seats, new TypeReference<Map<String, Boolean>>() {});
+	        } else {
+	            // Return an empty map if seats is null or empty
+	            return new HashMap<>();
+	        }
+	    } catch (JsonProcessingException e) {
+	        e.printStackTrace();
+	        return new HashMap<>(); // Return empty map on parsing error
+	    }
 	}
 
 	// Custom setter for seats
 	public void setSeats(Map<String, Boolean> seatList) {
-		try {
-			if (seatList != null) {
-				this.seats = objectMapper.writeValueAsString(seatList);
-			}
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
+	    try {
+	        if (seatList != null) {
+	            this.seats = objectMapper.writeValueAsString(seatList);
+	        } else {
+	            // Initialize with empty JSON object if seatList is null
+	            this.seats = "{}";
+	        }
+	    } catch (JsonProcessingException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 
 	// Getters and setters for other fields
 
@@ -178,11 +186,11 @@ public class Flight {
 		this.seatTypes = seatTypes;
 	}
 
-	public Integer getFare() {
+	public BigDecimal getFare() {
 		return fare;
 	}
 
-	public void setFare(Integer fare) {
+	public void setFare(BigDecimal fare) {
 		this.fare = fare;
 	}
 
@@ -249,7 +257,7 @@ public class Flight {
 	}
 
 	public Flight(Long flightId, Long companyId,String flightNo, String origin, String destination, Integer totalSeats,
-			Integer availableSeats, String seatTypes,Integer fare, String baggageInfo, Long bookingId,
+			Integer availableSeats, String seatTypes,BigDecimal fare, String baggageInfo, Long bookingId,
 			String dates, String timings, String seats) {
 		super();
 		this.flightId = flightId;
@@ -260,7 +268,7 @@ public class Flight {
 		this.totalSeats = totalSeats;
 		this.availableSeats = availableSeats;
 		this.seatTypes = seatTypes;
-		this.fare = fare;
+		this.fare=fare;
 		this.baggageInfo = baggageInfo;
 		this.bookingId = bookingId;
 		this.dates = dates;

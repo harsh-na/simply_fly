@@ -8,16 +8,30 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hexw.web.dao.BookingRepo;
 import com.hexw.web.dao.FlightRepo;
+import com.hexw.web.dao.PassengerRepo;
 import com.hexw.web.mapper.FlightMapper;
+import com.hexw.web.models.Booking;
 import com.hexw.web.models.Flight;
+import com.hexw.web.models.Passengers;
+
+import jakarta.transaction.Transactional;
+
 import com.hexw.web.dto.FlightDTO;
+import com.hexw.web.dto.PassengerDTO;
 
 @Service
 public class FlightServices {
 
     @Autowired
     private FlightRepo flightRepository;
+    
+    @Autowired
+    private PassengerRepo passengerRepository;
+    
+    @Autowired
+    private BookingRepo bookingRepository;
 
     public Flight addFlight(Flight flight) {
         return flightRepository.save(flight);
@@ -125,24 +139,28 @@ public class FlightServices {
         return flightRepository.findAll();
     }
 
-    public String bookSeats(Long flightId, List<String> seatNumbers) {
-        Optional<Flight> flightOptional = flightRepository.findById(flightId);
+//    public String bookSeats(Long flightId, List<String> seatNumbers) {
+//        Optional<Flight> flightOptional = flightRepository.findById(flightId);
+//
+//        if (flightOptional.isPresent()) {
+//            Flight flight = flightOptional.get();
+//
+//            Map<String, Boolean> seatData = flight.getSeats();
+//
+//            for (String seatNumber : seatNumbers) {
+//                seatData.put(seatNumber, false);
+//                flight.setAvailableSeats(flight.getAvailableSeats() - 1);
+//            }
+//
+//            flight.setSeats(seatData);
+//            flightRepository.save(flight);
+//
+//            return "Seats " + seatNumbers + " have been successfully booked.";
+//        }
+//        return null;
+//    }
+    
+    
+    
 
-        if (flightOptional.isPresent()) {
-            Flight flight = flightOptional.get();
-
-            Map<String, Boolean> seatData = flight.getSeats();
-
-            for (String seatNumber : seatNumbers) {
-                seatData.put(seatNumber, false);
-                flight.setAvailableSeats(flight.getAvailableSeats() - 1);
-            }
-
-            flight.setSeats(seatData);
-            flightRepository.save(flight);
-
-            return "Seats " + seatNumbers + " have been successfully booked.";
-        }
-        return null;
-    }
 }

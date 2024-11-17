@@ -11,6 +11,10 @@ public class Passengers {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "passenger_id")
 	private Long passengerId;
+	
+	@NotNull(message = "Booking ID is required")
+    @Column(name = "booking_id", nullable = false)
+    private Long bookingId;
 
 	@NotBlank(message = "Full name is required")
 	@Size(max = 100, message = "Full name should not exceed 100 characters")
@@ -41,12 +45,15 @@ public class Passengers {
 	@NotNull(message = "Seat number is required")
 	@Positive(message = "Seat number must be positive")
 	@Column(name = "seat_no", nullable = false)
-	private Integer seatNo;
+	private String seatNo;
+
+	
 
 	@Override
 	public String toString() {
-		return "Passengers [passengerId=" + passengerId + ", fullName=" + fullName + ", age=" + age + ", email=" + email
-				+ ", phone=" + phone + ", seatType=" + seatType + ", seatNo=" + seatNo + "]";
+		return "Passengers [passengerId=" + passengerId + ", bookingId=" + bookingId + ", fullName=" + fullName
+				+ ", age=" + age + ", email=" + email + ", phone=" + phone + ", seatType=" + seatType + ", seatNo="
+				+ seatNo + "]";
 	}
 
 	public Long getPassengerId() {
@@ -97,20 +104,30 @@ public class Passengers {
 		this.seatType = seatType;
 	}
 
-	public Integer getSeatNo() {
+	public String getSeatNo() {
 		return seatNo;
 	}
 
-	public void setSeatNo(Integer seatNo) {
+	public void setSeatNo(String seatNo) {
 		this.seatNo = seatNo;
 	}
+	
+	public Long getBookingId() {
+		return bookingId;
+	}
+
+	public void setBookingId(Long bookingId) {
+		this.bookingId = bookingId;
+	}
+
 
 	// Default constructor
 	public Passengers() {
 	}
 
 	// All-args constructor
-	public Passengers(String fullName, Integer age, String email, Long phone, String seatType, Integer seatNo) {
+	public Passengers(Long bookingId, String fullName, Integer age, String email, Long phone, String seatType, String seatNo) {
+		this.bookingId=bookingId;
 		this.fullName = fullName;
 		this.age = age;
 		this.email = email;

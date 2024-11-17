@@ -1,5 +1,6 @@
 package com.hexw.web.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class FlightDTO {
     private Integer totalSeats;
     private Integer availableSeats;
     private String seatTypes;
-    private Integer fare;
+    private BigDecimal fare;
     private String baggageInfo;
     private Long bookingId;
     private List<String> dates;
@@ -85,11 +86,11 @@ public class FlightDTO {
         this.seatTypes = seatTypes;
     }
 
-    public Integer getFare() {
+    public BigDecimal getFare() {
         return fare;
     }
 
-    public void setFare(Integer fare) {
+    public void setFare(BigDecimal fare) {
         this.fare = fare;
     }
 
