@@ -37,8 +37,8 @@ public class Booking {
     @Column(name = "payment_id", nullable = false)
     private Long paymentId;
 
-    @NotNull(message = "Seat number is required")
-    @Min(value = 1, message = "Seat number must be at least 1")
+//    @NotNull(message = "Seat number is required")
+//    @Min(value = 1, message = "Seat number must be at least 1")
     @Column(name = "seat_no", nullable = false)
     private List<String> seatNo;
 

@@ -26,7 +26,6 @@ public class BookingController {
                 bookingRequest.getFlightId(),
                 bookingRequest.getSeatNo(),
                 bookingRequest.getUserId(),
-                bookingRequest.getPaymentId(),
                 bookingRequest.getPassengers() // Assuming you have passengers in the DTO
         );
 

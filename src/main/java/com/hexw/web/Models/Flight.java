@@ -24,6 +24,9 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "flights")
 public class Flight {
 
+	// ObjectMapper instance for handling JSON
+	private static final ObjectMapper objectMapper = new ObjectMapper();
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long flightId;
@@ -91,34 +94,41 @@ public class Flight {
 
 	// Custom getter for seats
 	public Map<String, Boolean> getSeats() {
-	    try {
-	        if (seats != null && !seats.isEmpty()) {
-	            objectMapper.findAndRegisterModules(); // Ensure proper modules for JSON parsing are loaded
-	            return objectMapper.readValue(seats, new TypeReference<Map<String, Boolean>>() {});
-	        } else {
-	            // Return an empty map if seats is null or empty
-	            return new HashMap<>();
-	        }
-	    } catch (JsonProcessingException e) {
-	        e.printStackTrace();
-	        return new HashMap<>(); // Return empty map on parsing error
-	    }
+		try {
+			if (seats != null && !seats.isEmpty()) {
+				objectMapper.findAndRegisterModules();
+				// Ensure proper modules for JSON parsing are loaded
+				System.out.println("Parsed seats map: "+seats);
+				Map<String, Boolean> parsedSeats = objectMapper.readValue(seats,
+						new TypeReference<Map<String, Boolean>>() {
+						});
+				System.out.println("Parsed seats map: " + parsedSeats);
+				return parsedSeats;
+			} else {
+				// Return an empty map if seats is null or empty
+				System.out.println("Seats field is null or empty.");
+				return new HashMap<>();
+			}
+		} catch (JsonProcessingException e) {
+			System.err.println("Error parsing seats JSON: " + e.getMessage());
+			e.printStackTrace();
+			return new HashMap<>(); // Return empty map on parsing error
+		}
 	}
 
 	// Custom setter for seats
 	public void setSeats(Map<String, Boolean> seatList) {
-	    try {
-	        if (seatList != null) {
-	            this.seats = objectMapper.writeValueAsString(seatList);
-	        } else {
-	            // Initialize with empty JSON object if seatList is null
-	            this.seats = "{}";
-	        }
-	    } catch (JsonProcessingException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			if (seatList != null) {
+				this.seats = objectMapper.writeValueAsString(seatList);
+			} else {
+				// Initialize with empty JSON object if seatList is null
+				this.seats = "{}";
+			}
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 	}
-
 
 	// Getters and setters for other fields
 
@@ -210,9 +220,6 @@ public class Flight {
 		this.bookingId = bookingId;
 	}
 
-	// ObjectMapper instance for handling JSON
-	private static final ObjectMapper objectMapper = new ObjectMapper();
-
 	// Getters and setters for dates
 	public List<String> getDates() {
 		try {
@@ -256,9 +263,9 @@ public class Flight {
 		}
 	}
 
-	public Flight(Long flightId, Long companyId,String flightNo, String origin, String destination, Integer totalSeats,
-			Integer availableSeats, String seatTypes,BigDecimal fare, String baggageInfo, Long bookingId,
-			String dates, String timings, String seats) {
+	public Flight(Long flightId, Long companyId, String flightNo, String origin, String destination, Integer totalSeats,
+			Integer availableSeats, String seatTypes, BigDecimal fare, String baggageInfo, Long bookingId, String dates,
+			String timings, String seats) {
 		super();
 		this.flightId = flightId;
 		this.companyId = companyId;
@@ -268,7 +275,7 @@ public class Flight {
 		this.totalSeats = totalSeats;
 		this.availableSeats = availableSeats;
 		this.seatTypes = seatTypes;
-		this.fare=fare;
+		this.fare = fare;
 		this.baggageInfo = baggageInfo;
 		this.bookingId = bookingId;
 		this.dates = dates;

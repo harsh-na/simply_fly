@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,15 @@ public class FlightServices {
     public Optional<FlightDTO> getFlightById(Long flightId) {
         Optional<Flight> flight = flightRepository.findById(flightId);
         return flight.map(FlightMapper::toFlightDTO); // Use FlightMapper to convert Flight to FlightDTO
+    }
+    
+    public Optional<List<FlightDTO>> getFlightsByCompanyId(Long companyId) {
+        List<Flight> flights = flightRepository.findByCompanyId(companyId);
+        return flights.isEmpty() 
+               ? Optional.empty() 
+               : Optional.of(flights.stream()
+                   .map(FlightMapper::toFlightDTO) // Use the mapper for conversion
+                   .collect(Collectors.toList()));
     }
 
     public List<FlightDTO> searchFlights(String tripType, String origin, String destination, List<String> dates,

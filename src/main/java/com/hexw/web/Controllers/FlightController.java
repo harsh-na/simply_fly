@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import com.hexw.web.services.FlightServices;
 import com.hexw.web.mapper.FlightMapper;
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 @RequestMapping("/api/flights")
 public class FlightController {
 
@@ -38,11 +40,18 @@ public class FlightController {
 		return ResponseEntity.ok(savedFlightDTO);
 	}
 
-	@GetMapping("/{flightId}")
+	@GetMapping("/get/{flightId}")
 	public ResponseEntity<FlightDTO> getFlightById(@PathVariable Long flightId) {
 	    Optional<FlightDTO> flightDTO = flightService.getFlightById(flightId);
 	    return flightDTO.map(ResponseEntity::ok)  // Directly return FlightDTO from service
 	                    .orElseGet(() -> ResponseEntity.notFound().build()); // Return 404 if not found
+	}
+	
+	@GetMapping("/getAll/{companyId}")
+	public ResponseEntity<List<FlightDTO>> getFlightsByCompanyId(@PathVariable Long companyId) {
+	    return flightService.getFlightsByCompanyId(companyId)
+	        .map(ResponseEntity::ok) // If present, return 200 with the list
+	        .orElseGet(() -> ResponseEntity.notFound().build()); // If absent, return 404
 	}
 
 	@GetMapping("/search")

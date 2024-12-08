@@ -66,4 +66,5 @@ public class PassengerDTO {
     public void setSeatNo(String seatNo) {
         this.seatNo = seatNo;
     }
+
 }

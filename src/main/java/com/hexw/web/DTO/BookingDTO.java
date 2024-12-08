@@ -1,5 +1,7 @@
 package com.hexw.web.dto;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,8 +27,10 @@ public class BookingDTO {
     @NotNull(message = "Payment ID is required")
     private Long paymentId;
 
-    @NotNull(message = "Seat number is required")
-    @Min(value = 1, message = "Seat number must be at least 1")
+    @NotEmpty
+    @ElementCollection
+    @Column(columnDefinition = "TEXT")
+//    @Min(value = 1, message = "Seat number must be at least 1")
     private List<String> seatNo;
 
     @NotBlank(message = "Booking status is required")

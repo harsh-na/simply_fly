@@ -42,8 +42,8 @@ public class Passengers {
 	@Column(name = "seat_type", nullable = false, length = 20)
 	private String seatType;
 
-	@NotNull(message = "Seat number is required")
-	@Positive(message = "Seat number must be positive")
+//	@NotNull(message = "Seat number is required")
+//	@Positive(message = "Seat number must be positive")
 	@Column(name = "seat_no", nullable = false)
 	private String seatNo;
 

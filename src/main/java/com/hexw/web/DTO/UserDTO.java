@@ -20,7 +20,19 @@ public class UserDTO {
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotBlank(message = "Gender is required")
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, message = "Password must be at least 6 characters long")
+    private String password;
+    
+    public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@NotBlank(message = "Gender is required")
     private String gender;
     
     @NotNull(message = "Contact number is required")
