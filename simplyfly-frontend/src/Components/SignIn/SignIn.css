@@ -1,0 +1,133 @@
+/* General Container Styling
+/* General Container Styling */
+/* body {
+  overflow: hidden; 
+  height: 100vh; 
+  margin: 0; 
+} */
+
+/* Ensure the container takes the full height */
+/* html {
+  height: 100%; 
+}  */
+  
+.signin-container {
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align content towards the top */
+  background-color: #f5f5f5;
+  padding: 16px 16px 0; /* Reduced top margin by adjusting padding */
+  box-sizing: border-box; /* Ensure padding doesn't add to width/height */
+  overflow: hidden; /* Prevent scrolling */
+}
+
+/* Card Styling */
+.signin-card {
+  width: 90%; /* Adjust width for responsiveness */
+  max-width: 800px; /* Limit the maximum width */
+  padding: 32px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap; /* Ensure content wraps on smaller screens */
+  overflow: hidden; /* Prevent inner content overflow */
+}
+
+/* Grid Container Styling */
+.signin-grid-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping for small screens */
+  align-items: center;
+}
+
+/* Image Styling */
+.signin-image-container {
+  text-align: center;
+  flex: 1; /* Ensure equal space sharing */
+}
+
+.signin-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Form Container Styling */
+.signin-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 16px;
+  flex: 1; /* Ensure equal space sharing */
+}
+
+/* Header Styling */
+.signin-header {
+  text-align: left;
+  margin-bottom: 36px;
+  font-weight: bold;
+  color: #1976d2;
+  font-size: 24px; /* Make it responsive */
+}
+
+/* Input Fields Styling */
+.signin-textfield {
+  background-color: #fff;
+  border-radius: 5px;
+  margin-bottom: 16px;
+}
+
+/* Button Styling */
+.signin-button {
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: none;
+  border-radius: 5px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.signin-button:hover {
+  background-color: #1565c0;
+}
+
+/* Footer Styling */
+.signin-footer {
+  text-align: left;
+  margin-top: 16px;
+  color: #666;
+}
+
+.signin-link {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.signin-link:hover {
+  text-decoration: underline;
+}
+
+/* Media Query for Smaller Screens */
+@media (max-width: 768px) {
+  .signin-card {
+    flex-direction: column; /* Stack items vertically */
+    padding: 16px; /* Adjust padding for smaller screens */
+  }
+
+  .signin-image-container,
+  .signin-form-container {
+    flex: unset; /* Allow content to adjust size */
+    width: 100%; /* Full width for stacked layout */
+    text-align: center;
+  }
+
+  .signin-header {
+    font-size: 20px;
+  }
+}
